@@ -66,6 +66,28 @@ flutter run -d macos
 | `time_tracking_repository` | JSON-file–based storage for time entries, summaries, and domain models |
 | `settings_repository` | SharedPreferences wrapper for user settings (theme, hotkey, working hours) |
 
+## Contributing
+
+Contributions are welcome! Here's how to get involved:
+
+1. **Fork** the repository
+2. **Create a branch** for your feature or fix (`git checkout -b feat/my-feature`)
+3. **Make your changes** — follow the existing code style and ensure `flutter analyze` passes
+4. **Run tests** — `cd app && flutter test`
+5. **Commit** using [Conventional Commits](https://www.conventionalcommits.org/) (e.g. `feat:`, `fix:`, `chore:`)
+6. **Open a pull request** against `main`
+
+### Good first contributions
+
+- Adding tests for existing BLoCs and widgets
+- Improving accessibility (Semantics, VoiceOver support)
+- Supporting additional export formats beyond CSV
+
+### Development tips
+
+- The workspace uses Dart workspaces — run `flutter pub get` from the repo root to resolve all packages at once.
+- Lint rules are defined in `analysis_options.yaml` — CI will fail on unformatted code, so run `dart format .` before committing.
+
 ## License
 
-This is a personal project and is not currently licensed for redistribution.
+This project is licensed under the [MIT License](LICENSE).
