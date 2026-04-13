@@ -23,7 +23,6 @@ Future<void> bootstrap() async {
     center: true,
     title: 'Time Tracker',
     titleBarStyle: TitleBarStyle.hidden,
-    backgroundColor: Colors.transparent,
   );
   await windowManager.waitUntilReadyToShow(windowOptions, () async {
     await windowManager.show();
