@@ -90,6 +90,7 @@ Future<void> bootstrap() async {
       providers: [
         RepositoryProvider.value(value: timeTrackingRepository),
         RepositoryProvider.value(value: settingsRepository),
+        RepositoryProvider.value(value: hotkeyService),
       ],
       child: MultiBlocProvider(
         providers: [
