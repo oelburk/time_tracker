@@ -1,9 +1,5 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:flutter/services.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 import 'package:tray_manager/tray_manager.dart';
 
 enum TrayMode { coding, meeting, idle }
@@ -19,35 +15,17 @@ class TrayService with TrayListener {
   final Future<void> Function() onShowWindow;
   final Future<void> Function() onQuit;
 
-  static const _assetKeys = {
+  static const _icons = {
     TrayMode.coding: 'assets/icons/tray_coding.png',
     TrayMode.meeting: 'assets/icons/tray_meeting.png',
     TrayMode.idle: 'assets/icons/tray_idle.png',
   };
 
-  final Map<TrayMode, String> _iconPaths = {};
-
   Future<void> init() async {
-    await _extractIcons();
-    await trayManager.setIcon(_iconPaths[TrayMode.idle]!);
+    await trayManager.setIcon(_icons[TrayMode.idle]!);
     trayManager.addListener(this);
     await trayManager.setContextMenu(_buildMenu());
     await trayManager.setToolTip('Time Tracker');
-  }
-
-  /// Extracts bundled assets to the filesystem so tray_manager can read them.
-  Future<void> _extractIcons() async {
-    final dir = await getApplicationSupportDirectory();
-    final iconsDir = Directory(p.join(dir.path, 'tray_icons'));
-    if (!iconsDir.existsSync()) {
-      iconsDir.createSync(recursive: true);
-    }
-    for (final entry in _assetKeys.entries) {
-      final bytes = await rootBundle.load(entry.value);
-      final file = File(p.join(iconsDir.path, p.basename(entry.value)));
-      await file.writeAsBytes(bytes.buffer.asUint8List());
-      _iconPaths[entry.key] = file.path;
-    }
   }
 
   Menu _buildMenu() {
@@ -64,7 +42,7 @@ class TrayService with TrayListener {
   }
 
   Future<void> updateMode(TrayMode mode) async {
-    await trayManager.setIcon(_iconPaths[mode]!);
+    await trayManager.setIcon(_icons[mode]!);
     final tip = switch (mode) {
       TrayMode.coding => 'Time Tracker — Coding',
       TrayMode.meeting => 'Time Tracker — Meeting',
