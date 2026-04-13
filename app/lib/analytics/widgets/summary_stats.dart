@@ -36,8 +36,9 @@ class SummaryStats extends StatelessWidget {
     final dailyCount = current.dailyBreakdown.length;
     final avgDaily = dailyCount > 0 ? current.totalSeconds ~/ dailyCount : 0;
     final prevDailyCount = previous.dailyBreakdown.length;
-    final prevAvgDaily =
-        prevDailyCount > 0 ? previous.totalSeconds ~/ prevDailyCount : 0;
+    final prevAvgDaily = prevDailyCount > 0
+        ? previous.totalSeconds ~/ prevDailyCount
+        : 0;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,

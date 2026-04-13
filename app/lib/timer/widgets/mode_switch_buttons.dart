@@ -32,8 +32,8 @@ class ModeSwitchButtons extends StatelessWidget {
                     isActive: currentMode == TrackingMode.coding,
                     onPressed: () {
                       context.read<TimerBloc>().add(
-                            const TimerStarted(mode: TrackingMode.coding),
-                          );
+                        const TimerStarted(mode: TrackingMode.coding),
+                      );
                     },
                   ),
                 ),
@@ -46,8 +46,8 @@ class ModeSwitchButtons extends StatelessWidget {
                     isActive: currentMode == TrackingMode.meeting,
                     onPressed: () {
                       context.read<TimerBloc>().add(
-                            const TimerStarted(mode: TrackingMode.meeting),
-                          );
+                        const TimerStarted(mode: TrackingMode.meeting),
+                      );
                     },
                   ),
                 ),
@@ -67,13 +67,14 @@ class ModeSwitchButtons extends StatelessWidget {
                           width: double.infinity,
                           child: TextButton(
                             onPressed: () {
-                              context
-                                  .read<TimerBloc>()
-                                  .add(const TimerStopped());
+                              context.read<TimerBloc>().add(
+                                const TimerStopped(),
+                              );
                             },
                             style: TextButton.styleFrom(
-                              foregroundColor:
-                                  AppColors.error.withValues(alpha: 0.8),
+                              foregroundColor: AppColors.error.withValues(
+                                alpha: 0.8,
+                              ),
                               padding: const EdgeInsets.symmetric(
                                 vertical: AppSpacing.md,
                               ),
@@ -129,9 +130,10 @@ class _ModeButtonState extends State<_ModeButton>
       duration: const Duration(milliseconds: 100),
       reverseDuration: const Duration(milliseconds: 150),
     );
-    _scale = Tween<double>(begin: 1.0, end: 0.97).animate(
-      CurvedAnimation(parent: _scaleController, curve: Curves.easeOut),
-    );
+    _scale = Tween<double>(
+      begin: 1.0,
+      end: 0.97,
+    ).animate(CurvedAnimation(parent: _scaleController, curve: Curves.easeOut));
   }
 
   @override

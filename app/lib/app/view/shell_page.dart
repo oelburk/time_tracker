@@ -104,16 +104,11 @@ class _NavItem extends StatelessWidget {
         height: 36,
         child: Center(
           child: TweenAnimationBuilder<Color?>(
-            tween: ColorTween(
-              end: isSelected ? activeColor : inactiveColor,
-            ),
+            tween: ColorTween(end: isSelected ? activeColor : inactiveColor),
             duration: const Duration(milliseconds: 250),
             curve: Curves.easeOut,
-            builder: (context, color, _) => Icon(
-              isSelected ? activeIcon : icon,
-              color: color,
-              size: 18,
-            ),
+            builder: (context, color, _) =>
+                Icon(isSelected ? activeIcon : icon, color: color, size: 18),
           ),
         ),
       ),

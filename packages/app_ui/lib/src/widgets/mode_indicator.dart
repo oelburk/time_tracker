@@ -28,9 +28,10 @@ class _ModeIndicatorState extends State<ModeIndicator>
       vsync: this,
       duration: const Duration(milliseconds: 1400),
     );
-    _pulse = Tween<double>(begin: 0.3, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _pulse = Tween<double>(
+      begin: 0.3,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
     if (widget.isActive) _controller.repeat(reverse: true);
   }
 
@@ -55,17 +56,17 @@ class _ModeIndicatorState extends State<ModeIndicator>
   }
 
   Color _dotColor() => switch (widget.mode.toLowerCase()) {
-        'coding' => AppColors.codingPrimary,
-        'meeting' => AppColors.meetingPrimary,
-        _ => AppColors.idle,
-      };
+    'coding' => AppColors.codingPrimary,
+    'meeting' => AppColors.meetingPrimary,
+    _ => AppColors.idle,
+  };
 
   String _label() => switch (widget.mode.toLowerCase()) {
-        'coding' => 'CODING',
-        'meeting' => 'MEETING',
-        'idle' => 'IDLE',
-        _ => widget.mode.toUpperCase(),
-      };
+    'coding' => 'CODING',
+    'meeting' => 'MEETING',
+    'idle' => 'IDLE',
+    _ => widget.mode.toUpperCase(),
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -74,14 +75,12 @@ class _ModeIndicatorState extends State<ModeIndicator>
     final dot = Container(
       width: 6,
       height: 6,
-      decoration: BoxDecoration(
-        color: dotColor,
-        shape: BoxShape.circle,
-      ),
+      decoration: BoxDecoration(color: dotColor, shape: BoxShape.circle),
     );
 
-    final animatedDot =
-        widget.isActive ? FadeTransition(opacity: _pulse, child: dot) : dot;
+    final animatedDot = widget.isActive
+        ? FadeTransition(opacity: _pulse, child: dot)
+        : dot;
 
     return Row(
       mainAxisSize: MainAxisSize.min,

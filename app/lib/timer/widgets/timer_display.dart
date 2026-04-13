@@ -49,10 +49,10 @@ class _TimerDisplayState extends State<TimerDisplay>
       builder: (context, state) {
         final (isRunning, elapsed, modeKey) = switch (state) {
           TimerRunning(:final mode, :final elapsed) => (
-              true,
-              elapsed,
-              mode.name,
-            ),
+            true,
+            elapsed,
+            mode.name,
+          ),
           _ => (false, Duration.zero, 'idle'),
         };
 
@@ -130,9 +130,7 @@ class _FixedWidthClock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final style = AppTypography.monoLarge.copyWith(color: color);
-    final colonStyle = style.copyWith(
-      color: color.withValues(alpha: 0.4),
-    );
+    final colonStyle = style.copyWith(color: color.withValues(alpha: 0.4));
 
     return Row(
       mainAxisSize: MainAxisSize.min,

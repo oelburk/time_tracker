@@ -53,10 +53,8 @@ class HotkeySection extends StatelessWidget {
                     vertical: AppSpacing.sm,
                   ),
                   decoration: BoxDecoration(
-                    borderRadius:
-                        BorderRadius.circular(AppSpacing.chipRadius),
-                    border:
-                        Border.all(color: theme.dividerColor, width: 0.5),
+                    borderRadius: BorderRadius.circular(AppSpacing.chipRadius),
+                    border: Border.all(color: theme.dividerColor, width: 0.5),
                   ),
                   child: Text(
                     config.isConfigured ? config.label : '—',
@@ -83,10 +81,10 @@ class HotkeySection extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       context.read<SettingsBloc>().add(
-                            const SettingsHotkeyChanged(
-                              hotkeyConfig: HotkeyConfig(),
-                            ),
-                          );
+                        const SettingsHotkeyChanged(
+                          hotkeyConfig: HotkeyConfig(),
+                        ),
+                      );
                     },
                     child: Text(
                       'CLEAR',
@@ -111,8 +109,8 @@ class HotkeySection extends StatelessWidget {
       builder: (dialogContext) => _HotkeyRecorderDialog(
         onRecorded: (config) {
           context.read<SettingsBloc>().add(
-                SettingsHotkeyChanged(hotkeyConfig: config),
-              );
+            SettingsHotkeyChanged(hotkeyConfig: config),
+          );
         },
       ),
     );
@@ -192,10 +190,10 @@ class _HotkeyRecorderDialogState extends State<_HotkeyRecorderDialog> {
                   (m) => m == 'meta'
                       ? '⌘'
                       : m == 'ctrl'
-                          ? '⌃'
-                          : m == 'alt'
-                              ? '⌥'
-                              : '⇧',
+                      ? '⌃'
+                      : m == 'alt'
+                      ? '⌥'
+                      : '⇧',
                 ),
                 key.keyLabel,
               ].join(' + ');

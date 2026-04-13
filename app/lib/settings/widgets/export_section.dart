@@ -50,22 +50,23 @@ class ExportSection extends StatelessWidget {
     try {
       final repo = context.read<TimeTrackingRepository>();
       final csv = await repo.exportToCsv();
-      final dir = await getDownloadsDirectory() ??
+      final dir =
+          await getDownloadsDirectory() ??
           await getApplicationDocumentsDirectory();
       final file = File(
         '${dir.path}/time_tracker_export_${DateTime.now().millisecondsSinceEpoch}.csv',
       );
       await file.writeAsString(csv);
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Exported to ${file.path}')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Exported to ${file.path}')));
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Export failed: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Export failed: $e')));
       }
     }
   }

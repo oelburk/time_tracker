@@ -25,8 +25,9 @@ class LaunchAtLoginSection extends StatelessWidget {
         return true;
       },
       builder: (context, state) {
-        final enabled =
-            state is SettingsLoadSuccess ? state.launchAtLogin : false;
+        final enabled = state is SettingsLoadSuccess
+            ? state.launchAtLogin
+            : false;
         final theme = Theme.of(context);
         final tertiary = theme.textTheme.labelSmall?.color;
 
@@ -56,8 +57,8 @@ class LaunchAtLoginSection extends StatelessWidget {
                   onTap: () {
                     if (enabled) {
                       context.read<SettingsBloc>().add(
-                            const SettingsLaunchAtLoginChanged(enabled: false),
-                          );
+                        const SettingsLaunchAtLoginChanged(enabled: false),
+                      );
                     }
                   },
                 ),
@@ -68,8 +69,8 @@ class LaunchAtLoginSection extends StatelessWidget {
                   onTap: () {
                     if (!enabled) {
                       context.read<SettingsBloc>().add(
-                            const SettingsLaunchAtLoginChanged(enabled: true),
-                          );
+                        const SettingsLaunchAtLoginChanged(enabled: true),
+                      );
                     }
                   },
                 ),

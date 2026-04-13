@@ -54,8 +54,8 @@ class StatCard extends StatelessWidget {
               color: trendPositive == null
                   ? secondary
                   : trendPositive!
-                      ? AppColors.positive
-                      : AppColors.negative,
+                  ? AppColors.positive
+                  : AppColors.negative,
             ),
           ),
         ],

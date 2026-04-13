@@ -49,8 +49,7 @@ class MonthlyChart extends StatelessWidget {
                       PieChartSectionData(
                         value: summary.totalMeetingSeconds.toDouble(),
                         color: AppColors.meetingPrimary,
-                        title:
-                            '${((1 - summary.codingRatio) * 100).round()}%',
+                        title: '${((1 - summary.codingRatio) * 100).round()}%',
                         titleStyle: AppTypography.monoSmall.copyWith(
                           color: AppColors.darkBackground,
                           fontWeight: FontWeight.w600,

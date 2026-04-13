@@ -71,18 +71,22 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     final s = state;
     switch (s) {
       case TimerIdle():
-        emit(TimerIdle(
-          todayCodingSeconds: totals.coding,
-          todayMeetingSeconds: totals.meeting,
-        ));
+        emit(
+          TimerIdle(
+            todayCodingSeconds: totals.coding,
+            todayMeetingSeconds: totals.meeting,
+          ),
+        );
       case TimerRunning():
-        emit(TimerRunning(
-          mode: s.mode,
-          startTime: s.startTime,
-          elapsed: s.elapsed,
-          todayCodingSeconds: totals.coding,
-          todayMeetingSeconds: totals.meeting,
-        ));
+        emit(
+          TimerRunning(
+            mode: s.mode,
+            startTime: s.startTime,
+            elapsed: s.elapsed,
+            todayCodingSeconds: totals.coding,
+            todayMeetingSeconds: totals.meeting,
+          ),
+        );
     }
   }
 
@@ -109,10 +113,12 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     }
     _stopTicker();
     final totals = await _getTodayTotals();
-    emit(TimerIdle(
-      todayCodingSeconds: totals.coding,
-      todayMeetingSeconds: totals.meeting,
-    ));
+    emit(
+      TimerIdle(
+        todayCodingSeconds: totals.coding,
+        todayMeetingSeconds: totals.meeting,
+      ),
+    );
   }
 
   Future<void> _onSwitched(
@@ -161,10 +167,12 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
       await _saveCurrentSession();
       _stopTicker();
       final totals = await _getTodayTotals();
-      emit(TimerIdle(
-        todayCodingSeconds: totals.coding,
-        todayMeetingSeconds: totals.meeting,
-      ));
+      emit(
+        TimerIdle(
+          todayCodingSeconds: totals.coding,
+          todayMeetingSeconds: totals.meeting,
+        ),
+      );
     }
   }
 

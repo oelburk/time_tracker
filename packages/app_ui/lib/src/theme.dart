@@ -85,7 +85,9 @@ abstract final class AppTheme {
       dividerColor: border,
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
-      hoverColor: AppColors.codingPrimary.withValues(alpha: isDark ? 0.06 : 0.04),
+      hoverColor: AppColors.codingPrimary.withValues(
+        alpha: isDark ? 0.06 : 0.04,
+      ),
       cardTheme: CardThemeData(
         color: surface,
         elevation: 0,
@@ -141,11 +143,7 @@ abstract final class AppTheme {
         ),
       ),
       iconTheme: IconThemeData(color: secondary, size: 18),
-      dividerTheme: DividerThemeData(
-        color: border,
-        thickness: 0.5,
-        space: 0.5,
-      ),
+      dividerTheme: DividerThemeData(color: border, thickness: 0.5, space: 0.5),
       dialogTheme: DialogThemeData(
         backgroundColor: surface,
         surfaceTintColor: Colors.transparent,
@@ -155,7 +153,9 @@ abstract final class AppTheme {
         ),
       ),
       snackBarTheme: SnackBarThemeData(
-        backgroundColor: isDark ? AppColors.darkSurfaceVariant : AppColors.lightTextPrimary,
+        backgroundColor: isDark
+            ? AppColors.darkSurfaceVariant
+            : AppColors.lightTextPrimary,
         contentTextStyle: AppTypography.bodySmall.copyWith(
           color: isDark ? AppColors.darkTextPrimary : AppColors.lightSurface,
         ),

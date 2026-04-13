@@ -20,8 +20,9 @@ class ThemeSection extends StatelessWidget {
         return true;
       },
       builder: (context, state) {
-        final themeMode =
-            state is SettingsLoadSuccess ? state.themeMode : 'system';
+        final themeMode = state is SettingsLoadSuccess
+            ? state.themeMode
+            : 'system';
         return _Section(
           label: 'APPEARANCE',
           child: Row(
@@ -31,7 +32,10 @@ class ThemeSection extends StatelessWidget {
               _ThemeOption(label: 'Dark', value: 'dark', current: themeMode),
               const SizedBox(width: AppSpacing.sm),
               _ThemeOption(
-                  label: 'System', value: 'system', current: themeMode),
+                label: 'System',
+                value: 'system',
+                current: themeMode,
+              ),
             ],
           ),
         );
@@ -60,8 +64,8 @@ class _ThemeOption extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           context.read<SettingsBloc>().add(
-                SettingsThemeChanged(themeMode: value),
-              );
+            SettingsThemeChanged(themeMode: value),
+          );
           context.read<ThemeCubit>().setThemeMode(value);
         },
         child: AnimatedContainer(

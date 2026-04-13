@@ -53,31 +53,29 @@ class AnalyticsPage extends StatelessWidget {
                 onPrevious: () {
                   if (data.isWeekly) {
                     context.read<AnalyticsBloc>().add(
-                          AnalyticsWeekChanged(weekOffset: data.weekOffset - 1),
-                        );
+                      AnalyticsWeekChanged(weekOffset: data.weekOffset - 1),
+                    );
                   } else {
                     context.read<AnalyticsBloc>().add(
-                          AnalyticsMonthChanged(
-                              monthOffset: data.monthOffset - 1),
-                        );
+                      AnalyticsMonthChanged(monthOffset: data.monthOffset - 1),
+                    );
                   }
                 },
                 onNext: () {
                   if (data.isWeekly) {
                     context.read<AnalyticsBloc>().add(
-                          AnalyticsWeekChanged(weekOffset: data.weekOffset + 1),
-                        );
+                      AnalyticsWeekChanged(weekOffset: data.weekOffset + 1),
+                    );
                   } else {
                     context.read<AnalyticsBloc>().add(
-                          AnalyticsMonthChanged(
-                              monthOffset: data.monthOffset + 1),
-                        );
+                      AnalyticsMonthChanged(monthOffset: data.monthOffset + 1),
+                    );
                   }
                 },
                 onTabChanged: (isWeekly) {
                   context.read<AnalyticsBloc>().add(
-                        AnalyticsTabChanged(isWeekly: isWeekly),
-                      );
+                    AnalyticsTabChanged(isWeekly: isWeekly),
+                  );
                 },
               ),
               const SizedBox(height: AppSpacing.xl),

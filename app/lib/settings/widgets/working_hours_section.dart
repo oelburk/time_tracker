@@ -51,16 +51,16 @@ class WorkingHoursSection extends StatelessWidget {
                   minute: hours.startMinute,
                   onChanged: (h, m) {
                     context.read<SettingsBloc>().add(
-                          SettingsWorkingHoursChanged(
-                            workingHours: WorkingHours(
-                              startHour: h,
-                              startMinute: m,
-                              endHour: hours.endHour,
-                              endMinute: hours.endMinute,
-                              workingDays: hours.workingDays,
-                            ),
-                          ),
-                        );
+                      SettingsWorkingHoursChanged(
+                        workingHours: WorkingHours(
+                          startHour: h,
+                          startMinute: m,
+                          endHour: hours.endHour,
+                          endMinute: hours.endMinute,
+                          workingDays: hours.workingDays,
+                        ),
+                      ),
+                    );
                   },
                 ),
                 const SizedBox(width: AppSpacing.xl),
@@ -76,16 +76,16 @@ class WorkingHoursSection extends StatelessWidget {
                   minute: hours.endMinute,
                   onChanged: (h, m) {
                     context.read<SettingsBloc>().add(
-                          SettingsWorkingHoursChanged(
-                            workingHours: WorkingHours(
-                              startHour: hours.startHour,
-                              startMinute: hours.startMinute,
-                              endHour: h,
-                              endMinute: m,
-                              workingDays: hours.workingDays,
-                            ),
-                          ),
-                        );
+                      SettingsWorkingHoursChanged(
+                        workingHours: WorkingHours(
+                          startHour: hours.startHour,
+                          startMinute: hours.startMinute,
+                          endHour: h,
+                          endMinute: m,
+                          workingDays: hours.workingDays,
+                        ),
+                      ),
+                    );
                   },
                 ),
               ],
@@ -94,8 +94,13 @@ class WorkingHoursSection extends StatelessWidget {
             Row(
               children: [
                 for (final (label, day) in [
-                  ('M', 1), ('T', 2), ('W', 3), ('T', 4),
-                  ('F', 5), ('S', 6), ('S', 7),
+                  ('M', 1),
+                  ('T', 2),
+                  ('W', 3),
+                  ('T', 4),
+                  ('F', 5),
+                  ('S', 6),
+                  ('S', 7),
                 ]) ...[
                   _DayChip(
                     label: label,
@@ -109,16 +114,16 @@ class WorkingHoursSection extends StatelessWidget {
                         newDays.sort();
                       }
                       context.read<SettingsBloc>().add(
-                            SettingsWorkingHoursChanged(
-                              workingHours: WorkingHours(
-                                startHour: hours.startHour,
-                                startMinute: hours.startMinute,
-                                endHour: hours.endHour,
-                                endMinute: hours.endMinute,
-                                workingDays: newDays,
-                              ),
-                            ),
-                          );
+                        SettingsWorkingHoursChanged(
+                          workingHours: WorkingHours(
+                            startHour: hours.startHour,
+                            startMinute: hours.startMinute,
+                            endHour: hours.endHour,
+                            endMinute: hours.endMinute,
+                            workingDays: newDays,
+                          ),
+                        ),
+                      );
                     },
                   ),
                   if (day < 7) const SizedBox(width: AppSpacing.xs),

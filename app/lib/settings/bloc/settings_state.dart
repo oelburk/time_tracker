@@ -39,5 +39,10 @@ final class SettingsLoadSuccess extends SettingsState {
   }
 
   @override
-  List<Object?> get props => [themeMode, workingHours, hotkeyConfig, launchAtLogin];
+  List<Object?> get props => [
+    themeMode,
+    workingHours,
+    hotkeyConfig,
+    launchAtLogin,
+  ];
 }
