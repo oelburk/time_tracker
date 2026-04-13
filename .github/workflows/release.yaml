@@ -1,0 +1,51 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build & Release
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run tests
+        run: flutter test
+        working-directory: app
+
+      - name: Build macOS release
+        run: flutter build macos --release
+        working-directory: app
+
+      - name: Create DMG
+        run: |
+          brew install create-dmg
+          create-dmg \
+            --volname "Time Tracker" \
+            --window-pos 200 120 \
+            --window-size 660 400 \
+            --icon-size 160 \
+            --icon "Time Tracker.app" 180 170 \
+            --app-drop-link 480 170 \
+            --hide-extension "Time Tracker.app" \
+            "TimeTracker-macOS-${{ github.ref_name }}.dmg" \
+            "app/build/macos/Build/Products/Release/Time Tracker.app"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: TimeTracker-macOS-${{ github.ref_name }}.dmg

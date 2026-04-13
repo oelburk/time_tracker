@@ -1,0 +1,11 @@
+name: time_tracker_workspace
+publish_to: none
+
+workspace:
+  - app
+  - packages/app_ui
+  - packages/time_tracking_repository
+  - packages/settings_repository
+
+environment:
+  sdk: ^3.11.0
