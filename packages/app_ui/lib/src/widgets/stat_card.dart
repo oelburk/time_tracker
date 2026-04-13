@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../colors.dart';
+import '../spacing.dart';
 import '../typography.dart';
-import 'app_card.dart';
 
-/// Metric summary with label, value, and optional trend.
+/// Dense stat readout: label above, monospace value below, optional trend.
+/// No card wrapper — caller provides the container if needed.
 class StatCard extends StatelessWidget {
   const StatCard({
     super.key,
@@ -24,66 +26,40 @@ class StatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final secondary = theme.textTheme.bodySmall?.color;
+    final tertiary = theme.textTheme.labelSmall?.color;
 
-    Widget? trendRow;
-    if (trend != null && trend!.isNotEmpty) {
-      Color? trendColor;
-      IconData? trendIcon;
-      if (trendPositive != null) {
-        trendColor = trendPositive!
-            ? const Color(0xFF10B981)
-            : const Color(0xFFEF4444);
-        trendIcon = trendPositive!
-            ? Icons.trending_up_rounded
-            : Icons.trending_down_rounded;
-      }
-
-      trendRow = Padding(
-        padding: const EdgeInsets.only(top: 4),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (trendIcon != null)
-              Icon(trendIcon, size: 16, color: trendColor ?? secondary),
-            if (trendIcon != null) const SizedBox(width: 4),
-            Text(
-              trend!,
-              style: AppTypography.bodySmall.copyWith(
-                color: trendColor ?? secondary,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          label.toUpperCase(),
+          style: AppTypography.labelSmall.copyWith(
+            color: tertiary,
+            letterSpacing: 1.2,
+          ),
         ),
-      );
-    }
-
-    return AppCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  label,
-                  style: AppTypography.bodySmall.copyWith(color: secondary),
-                ),
-              ),
-              if (icon != null) Icon(icon, size: 18, color: secondary),
-            ],
+        const SizedBox(height: AppSpacing.xs),
+        Text(
+          value,
+          style: AppTypography.monoMedium.copyWith(
+            color: theme.textTheme.bodyLarge?.color,
           ),
-          const SizedBox(height: 6),
+        ),
+        if (trend != null && trend!.isNotEmpty) ...[
+          const SizedBox(height: 2),
           Text(
-            value,
-            style: AppTypography.headlineMedium.copyWith(
-              color: theme.textTheme.headlineMedium?.color,
+            trend!,
+            style: AppTypography.monoSmall.copyWith(
+              color: trendPositive == null
+                  ? secondary
+                  : trendPositive!
+                      ? AppColors.positive
+                      : AppColors.negative,
             ),
           ),
-          ?trendRow,
         ],
-      ),
+      ],
     );
   }
 }

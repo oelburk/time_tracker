@@ -14,7 +14,7 @@ class SummaryStats extends StatelessWidget {
 
   String _formatHours(int seconds) {
     final hours = seconds / 3600;
-    return hours.toStringAsFixed(1);
+    return '${hours.toStringAsFixed(1)}h';
   }
 
   String _formatDuration(int seconds) {
@@ -36,48 +36,38 @@ class SummaryStats extends StatelessWidget {
     final dailyCount = current.dailyBreakdown.length;
     final avgDaily = dailyCount > 0 ? current.totalSeconds ~/ dailyCount : 0;
     final prevDailyCount = previous.dailyBreakdown.length;
-    final prevAvgDaily = prevDailyCount > 0
-        ? previous.totalSeconds ~/ prevDailyCount
-        : 0;
+    final prevAvgDaily =
+        prevDailyCount > 0 ? previous.totalSeconds ~/ prevDailyCount : 0;
 
-    return Wrap(
-      spacing: AppSpacing.md,
-      runSpacing: AppSpacing.md,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          width: 170,
+        Expanded(
           child: StatCard(
-            label: 'Total Hours',
+            label: 'Total',
             value: _formatHours(current.totalSeconds),
-            icon: Icons.schedule,
             trend: _calculateTrend(current.totalSeconds, previous.totalSeconds),
             trendPositive: current.totalSeconds >= previous.totalSeconds,
           ),
         ),
-        SizedBox(
-          width: 170,
+        Expanded(
           child: StatCard(
-            label: 'Daily Average',
+            label: 'Avg/day',
             value: _formatDuration(avgDaily),
-            icon: Icons.bar_chart,
             trend: _calculateTrend(avgDaily, prevAvgDaily),
             trendPositive: avgDaily >= prevAvgDaily,
           ),
         ),
-        SizedBox(
-          width: 170,
+        Expanded(
           child: StatCard(
-            label: 'Longest Session',
+            label: 'Longest',
             value: _formatDuration(current.longestSessionSeconds),
-            icon: Icons.emoji_events,
           ),
         ),
-        SizedBox(
-          width: 170,
+        Expanded(
           child: StatCard(
-            label: 'Coding Ratio',
+            label: 'Code %',
             value: '${(current.codingRatio * 100).round()}%',
-            icon: Icons.code,
           ),
         ),
       ],

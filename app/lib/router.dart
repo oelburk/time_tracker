@@ -4,6 +4,7 @@ import 'package:time_tracking_repository/time_tracking_repository.dart';
 import 'package:settings_repository/settings_repository.dart';
 import 'analytics/bloc/analytics_bloc.dart';
 import 'analytics/bloc/analytics_event.dart';
+import 'hotkey/hotkey_service.dart';
 import 'settings/bloc/settings_bloc.dart';
 import 'settings/bloc/settings_event.dart';
 import 'app/view/shell_page.dart';
@@ -45,6 +46,7 @@ final routerConfig = GoRouter(
             child: BlocProvider(
               create: (context) => SettingsBloc(
                 settingsRepository: context.read<SettingsRepository>(),
+                hotkeyService: context.read<HotkeyService>(),
               )..add(const SettingsLoaded()),
               child: const SettingsPage(),
             ),

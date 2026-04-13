@@ -11,6 +11,7 @@ class SettingsRepository {
   static const _keyThemeMode = 'theme_mode';
   static const _keyWorkingHours = 'working_hours';
   static const _keyHotkeyConfig = 'hotkey_config';
+  static const _keyLaunchAtLogin = 'launch_at_login';
 
   Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
@@ -56,5 +57,13 @@ class SettingsRepository {
 
   Future<void> setHotkeyConfig(HotkeyConfig config) async {
     await _preferences.setString(_keyHotkeyConfig, jsonEncode(config.toJson()));
+  }
+
+  bool getLaunchAtLogin() {
+    return _preferences.getBool(_keyLaunchAtLogin) ?? false;
+  }
+
+  Future<void> setLaunchAtLogin(bool enabled) async {
+    await _preferences.setBool(_keyLaunchAtLogin, enabled);
   }
 }

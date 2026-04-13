@@ -1,8 +1,9 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:app_ui/app_ui.dart';
 import 'package:settings_repository/settings_repository.dart';
+
 import '../bloc/settings_bloc.dart';
 import '../bloc/settings_event.dart';
 import '../bloc/settings_state.dart';
@@ -12,6 +13,9 @@ class HotkeySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final tertiary = theme.textTheme.labelSmall?.color;
+
     return BlocBuilder<SettingsBloc, SettingsState>(
       buildWhen: (prev, curr) {
         if (prev is SettingsLoadSuccess && curr is SettingsLoadSuccess) {
@@ -23,79 +27,79 @@ class HotkeySection extends StatelessWidget {
         final config = state is SettingsLoadSuccess
             ? state.hotkeyConfig
             : const HotkeyConfig();
-        return AppCard(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Mode Switch Hotkey',
-                style: AppTypography.titleMedium.copyWith(
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
-                ),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'HOTKEY',
+              style: AppTypography.labelSmall.copyWith(
+                color: tertiary,
+                letterSpacing: 1.5,
               ),
-              const SizedBox(height: AppSpacing.sm),
-              Text(
-                'Press to toggle between Coding and Meeting modes',
-                style: AppTypography.bodySmall.copyWith(
-                  color: Theme.of(context).textTheme.bodySmall?.color,
-                ),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              'Toggle between coding and meeting modes',
+              style: AppTypography.bodySmall.copyWith(
+                color: theme.textTheme.bodySmall?.color,
               ),
-              const SizedBox(height: AppSpacing.md),
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.lg,
-                      vertical: AppSpacing.md,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      borderRadius: BorderRadius.circular(
-                        AppSpacing.buttonRadius,
-                      ),
-                      border: Border.all(color: Theme.of(context).dividerColor),
-                    ),
-                    child: Text(
-                      config.isConfigured ? config.label : 'Not set',
-                      style: AppTypography.labelLarge.copyWith(
-                        color: config.isConfigured
-                            ? Theme.of(context).textTheme.bodyLarge?.color
-                            : Theme.of(context).textTheme.bodySmall?.color,
-                      ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                    vertical: AppSpacing.sm,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius:
+                        BorderRadius.circular(AppSpacing.chipRadius),
+                    border:
+                        Border.all(color: theme.dividerColor, width: 0.5),
+                  ),
+                  child: Text(
+                    config.isConfigured ? config.label : '—',
+                    style: AppTypography.monoSmall.copyWith(
+                      color: config.isConfigured
+                          ? theme.textTheme.bodyLarge?.color
+                          : tertiary,
                     ),
                   ),
+                ),
+                const SizedBox(width: AppSpacing.md),
+                GestureDetector(
+                  onTap: () => _showHotkeyRecorder(context),
+                  child: Text(
+                    'RECORD',
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.codingPrimary,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ),
+                if (config.isConfigured) ...[
                   const SizedBox(width: AppSpacing.md),
-                  ElevatedButton(
-                    onPressed: () => _showHotkeyRecorder(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.codingPrimary,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.lg,
-                        vertical: AppSpacing.md,
+                  GestureDetector(
+                    onTap: () {
+                      context.read<SettingsBloc>().add(
+                            const SettingsHotkeyChanged(
+                              hotkeyConfig: HotkeyConfig(),
+                            ),
+                          );
+                    },
+                    child: Text(
+                      'CLEAR',
+                      style: AppTypography.labelSmall.copyWith(
+                        color: theme.textTheme.bodySmall?.color,
+                        letterSpacing: 1,
                       ),
                     ),
-                    child: const Text('Record'),
                   ),
-                  if (config.isConfigured) ...[
-                    const SizedBox(width: AppSpacing.sm),
-                    IconButton(
-                      onPressed: () {
-                        context.read<SettingsBloc>().add(
-                          const SettingsHotkeyChanged(
-                            hotkeyConfig: HotkeyConfig(),
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.clear, size: 18),
-                      tooltip: 'Clear hotkey',
-                    ),
-                  ],
                 ],
-              ),
-            ],
-          ),
+              ],
+            ),
+          ],
         );
       },
     );
@@ -107,8 +111,8 @@ class HotkeySection extends StatelessWidget {
       builder: (dialogContext) => _HotkeyRecorderDialog(
         onRecorded: (config) {
           context.read<SettingsBloc>().add(
-            SettingsHotkeyChanged(hotkeyConfig: config),
-          );
+                SettingsHotkeyChanged(hotkeyConfig: config),
+              );
         },
       ),
     );
@@ -124,7 +128,7 @@ class _HotkeyRecorderDialog extends StatefulWidget {
 }
 
 class _HotkeyRecorderDialogState extends State<_HotkeyRecorderDialog> {
-  String _displayText = 'Press a key combination...';
+  String _displayText = 'Press a key combination…';
   HotkeyConfig? _recorded;
   final _focusNode = FocusNode();
 
@@ -142,8 +146,16 @@ class _HotkeyRecorderDialogState extends State<_HotkeyRecorderDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return AlertDialog(
-      title: const Text('Record Hotkey'),
+      title: Text(
+        'RECORD HOTKEY',
+        style: AppTypography.labelSmall.copyWith(
+          color: theme.textTheme.labelSmall?.color,
+          letterSpacing: 1.5,
+        ),
+      ),
       content: KeyboardListener(
         focusNode: _focusNode,
         onKeyEvent: (event) {
@@ -180,10 +192,10 @@ class _HotkeyRecorderDialogState extends State<_HotkeyRecorderDialog> {
                   (m) => m == 'meta'
                       ? '⌘'
                       : m == 'ctrl'
-                      ? '⌃'
-                      : m == 'alt'
-                      ? '⌥'
-                      : '⇧',
+                          ? '⌃'
+                          : m == 'alt'
+                              ? '⌥'
+                              : '⇧',
                 ),
                 key.keyLabel,
               ].join(' + ');
@@ -199,17 +211,19 @@ class _HotkeyRecorderDialogState extends State<_HotkeyRecorderDialog> {
           }
         },
         child: Container(
-          width: 250,
+          width: 220,
           padding: const EdgeInsets.all(AppSpacing.xl),
           decoration: BoxDecoration(
-            color: Theme.of(context).scaffoldBackgroundColor,
+            color: theme.scaffoldBackgroundColor,
             borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-            border: Border.all(color: Theme.of(context).dividerColor),
+            border: Border.all(color: theme.dividerColor, width: 0.5),
           ),
           child: Center(
             child: Text(
               _displayText,
-              style: AppTypography.titleMedium,
+              style: AppTypography.monoSmall.copyWith(
+                color: theme.textTheme.bodyLarge?.color,
+              ),
               textAlign: TextAlign.center,
             ),
           ),
@@ -218,16 +232,30 @@ class _HotkeyRecorderDialogState extends State<_HotkeyRecorderDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text(
+            'CANCEL',
+            style: AppTypography.labelSmall.copyWith(
+              color: theme.textTheme.bodySmall?.color,
+              letterSpacing: 1,
+            ),
+          ),
         ),
-        ElevatedButton(
+        TextButton(
           onPressed: _recorded != null
               ? () {
                   widget.onRecorded(_recorded!);
                   Navigator.of(context).pop();
                 }
               : null,
-          child: const Text('Save'),
+          child: Text(
+            'SAVE',
+            style: AppTypography.labelSmall.copyWith(
+              color: _recorded != null
+                  ? AppColors.codingPrimary
+                  : theme.textTheme.labelSmall?.color,
+              letterSpacing: 1,
+            ),
+          ),
         ),
       ],
     );

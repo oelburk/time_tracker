@@ -16,7 +16,7 @@ class WorkingHours extends Equatable {
   final List<int> workingDays; // 1=Mon, 7=Sun
 
   bool isWithinWorkingHours(DateTime dateTime) {
-    if (!workingDays.contains(dateTime.weekday)) return false;
+    if (!workingDays.contains(dateTime.weekday)) return true;
     final currentMinutes = dateTime.hour * 60 + dateTime.minute;
     final startMinutes = startHour * 60 + startMinute;
     final endMinutes = endHour * 60 + endMinute;

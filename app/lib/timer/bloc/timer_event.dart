@@ -35,3 +35,9 @@ final class TimerWorkingHoursExceeded extends TimerEvent {
   @override
   List<Object?> get props => [];
 }
+
+final class TimerTodayTotalsRequested extends TimerEvent {
+  const TimerTodayTotalsRequested();
+  @override
+  List<Object?> get props => [];
+}

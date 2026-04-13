@@ -1,7 +1,8 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:app_ui/app_ui.dart';
 import 'package:settings_repository/settings_repository.dart';
+
 import '../bloc/settings_bloc.dart';
 import '../bloc/settings_event.dart';
 import '../bloc/settings_state.dart';
@@ -11,6 +12,9 @@ class WorkingHoursSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final tertiary = theme.textTheme.labelSmall?.color;
+
     return BlocBuilder<SettingsBloc, SettingsState>(
       buildWhen: (prev, curr) {
         if (prev is SettingsLoadSuccess && curr is SettingsLoadSuccess) {
@@ -22,117 +26,106 @@ class WorkingHoursSection extends StatelessWidget {
         final hours = state is SettingsLoadSuccess
             ? state.workingHours
             : const WorkingHours();
-        return AppCard(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Working Hours',
-                style: AppTypography.titleMedium.copyWith(
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'WORKING HOURS',
+              style: AppTypography.labelSmall.copyWith(
+                color: tertiary,
+                letterSpacing: 1.5,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Row(
+              children: [
+                Text(
+                  'Start',
+                  style: AppTypography.bodySmall.copyWith(
+                    color: theme.textTheme.bodySmall?.color,
+                  ),
                 ),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              Row(
-                children: [
-                  Text(
-                    'Start: ',
-                    style: AppTypography.bodyLarge.copyWith(
-                      color: Theme.of(context).textTheme.bodyLarge?.color,
-                    ),
-                  ),
-                  _TimePickerButton(
-                    hour: hours.startHour,
-                    minute: hours.startMinute,
-                    onChanged: (h, m) {
-                      context.read<SettingsBloc>().add(
-                        SettingsWorkingHoursChanged(
-                          workingHours: WorkingHours(
-                            startHour: h,
-                            startMinute: m,
-                            endHour: hours.endHour,
-                            endMinute: hours.endMinute,
-                            workingDays: hours.workingDays,
+                const SizedBox(width: AppSpacing.sm),
+                _TimePickerButton(
+                  hour: hours.startHour,
+                  minute: hours.startMinute,
+                  onChanged: (h, m) {
+                    context.read<SettingsBloc>().add(
+                          SettingsWorkingHoursChanged(
+                            workingHours: WorkingHours(
+                              startHour: h,
+                              startMinute: m,
+                              endHour: hours.endHour,
+                              endMinute: hours.endMinute,
+                              workingDays: hours.workingDays,
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(width: AppSpacing.xl),
-                  Text(
-                    'End: ',
-                    style: AppTypography.bodyLarge.copyWith(
-                      color: Theme.of(context).textTheme.bodyLarge?.color,
-                    ),
-                  ),
-                  _TimePickerButton(
-                    hour: hours.endHour,
-                    minute: hours.endMinute,
-                    onChanged: (h, m) {
-                      context.read<SettingsBloc>().add(
-                        SettingsWorkingHoursChanged(
-                          workingHours: WorkingHours(
-                            startHour: hours.startHour,
-                            startMinute: hours.startMinute,
-                            endHour: h,
-                            endMinute: m,
-                            workingDays: hours.workingDays,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              Text(
-                'Working Days',
-                style: AppTypography.bodyLarge.copyWith(
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                        );
+                  },
                 ),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              Wrap(
-                spacing: AppSpacing.sm,
-                children: [
-                  for (final entry in {
-                    'Mon': 1,
-                    'Tue': 2,
-                    'Wed': 3,
-                    'Thu': 4,
-                    'Fri': 5,
-                    'Sat': 6,
-                    'Sun': 7,
-                  }.entries)
-                    _DayChip(
-                      label: entry.key,
-                      isSelected: hours.workingDays.contains(entry.value),
-                      onTap: () {
-                        final newDays = List<int>.from(hours.workingDays);
-                        if (newDays.contains(entry.value)) {
-                          newDays.remove(entry.value);
-                        } else {
-                          newDays.add(entry.value);
-                          newDays.sort();
-                        }
-                        context.read<SettingsBloc>().add(
+                const SizedBox(width: AppSpacing.xl),
+                Text(
+                  'End',
+                  style: AppTypography.bodySmall.copyWith(
+                    color: theme.textTheme.bodySmall?.color,
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                _TimePickerButton(
+                  hour: hours.endHour,
+                  minute: hours.endMinute,
+                  onChanged: (h, m) {
+                    context.read<SettingsBloc>().add(
                           SettingsWorkingHoursChanged(
                             workingHours: WorkingHours(
                               startHour: hours.startHour,
                               startMinute: hours.startMinute,
-                              endHour: hours.endHour,
-                              endMinute: hours.endMinute,
-                              workingDays: newDays,
+                              endHour: h,
+                              endMinute: m,
+                              workingDays: hours.workingDays,
                             ),
                           ),
                         );
-                      },
-                    ),
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            Row(
+              children: [
+                for (final (label, day) in [
+                  ('M', 1), ('T', 2), ('W', 3), ('T', 4),
+                  ('F', 5), ('S', 6), ('S', 7),
+                ]) ...[
+                  _DayChip(
+                    label: label,
+                    isSelected: hours.workingDays.contains(day),
+                    onTap: () {
+                      final newDays = List<int>.from(hours.workingDays);
+                      if (newDays.contains(day)) {
+                        newDays.remove(day);
+                      } else {
+                        newDays.add(day);
+                        newDays.sort();
+                      }
+                      context.read<SettingsBloc>().add(
+                            SettingsWorkingHoursChanged(
+                              workingHours: WorkingHours(
+                                startHour: hours.startHour,
+                                startMinute: hours.startMinute,
+                                endHour: hours.endHour,
+                                endMinute: hours.endMinute,
+                                workingDays: newDays,
+                              ),
+                            ),
+                          );
+                    },
+                  ),
+                  if (day < 7) const SizedBox(width: AppSpacing.xs),
                 ],
-              ),
-            ],
-          ),
+              ],
+            ),
+          ],
         );
       },
     );
@@ -152,6 +145,8 @@ class _TimePickerButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return GestureDetector(
       onTap: () async {
         final time = await showTimePicker(
@@ -168,13 +163,13 @@ class _TimePickerButton extends StatelessWidget {
           vertical: AppSpacing.sm,
         ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppSpacing.buttonRadius),
-          border: Border.all(color: Theme.of(context).dividerColor),
+          borderRadius: BorderRadius.circular(AppSpacing.chipRadius),
+          border: Border.all(color: theme.dividerColor, width: 0.5),
         ),
         child: Text(
           '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}',
-          style: AppTypography.labelLarge.copyWith(
-            color: Theme.of(context).textTheme.bodyLarge?.color,
+          style: AppTypography.monoSmall.copyWith(
+            color: theme.textTheme.bodyLarge?.color,
           ),
         ),
       ),
@@ -195,29 +190,36 @@ class _DayChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md,
-          vertical: AppSpacing.sm,
-        ),
+        width: 28,
+        height: 28,
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.codingPrimary : Colors.transparent,
+          color: isSelected
+              ? AppColors.codingPrimary.withValues(alpha: 0.15)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(AppSpacing.chipRadius),
           border: Border.all(
             color: isSelected
-                ? AppColors.codingPrimary
-                : Theme.of(context).dividerColor,
+                ? AppColors.codingPrimary.withValues(alpha: 0.4)
+                : theme.dividerColor,
+            width: 0.5,
           ),
         ),
-        child: Text(
-          label,
-          style: AppTypography.bodySmall.copyWith(
-            color: isSelected
-                ? Colors.white
-                : Theme.of(context).textTheme.bodySmall?.color,
+        child: Center(
+          child: Text(
+            label,
+            style: AppTypography.labelSmall.copyWith(
+              color: isSelected
+                  ? AppColors.codingPrimary
+                  : theme.textTheme.bodySmall?.color,
+              fontSize: 9,
+              letterSpacing: 0,
+            ),
           ),
         ),
       ),

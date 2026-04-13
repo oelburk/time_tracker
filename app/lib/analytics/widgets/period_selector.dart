@@ -20,45 +20,52 @@ class PeriodSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(
+
+    return Row(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _TabButton(
-              label: 'Weekly',
-              isActive: isWeekly,
-              onTap: () => onTabChanged(true),
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            _TabButton(
-              label: 'Monthly',
-              isActive: !isWeekly,
-              onTap: () => onTabChanged(false),
-            ),
-          ],
+        _TabButton(
+          label: 'WEEK',
+          isActive: isWeekly,
+          onTap: () => onTabChanged(true),
         ),
-        const SizedBox(height: AppSpacing.lg),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            IconButton(
-              onPressed: onPrevious,
-              icon: const Icon(Icons.chevron_left),
-              iconSize: 20,
-            ),
-            Text(
+        const SizedBox(width: 1),
+        _TabButton(
+          label: 'MONTH',
+          isActive: !isWeekly,
+          onTap: () => onTabChanged(false),
+        ),
+        const Spacer(),
+        GestureDetector(
+          onTap: onPrevious,
+          child: Icon(
+            Icons.chevron_left,
+            size: 16,
+            color: theme.textTheme.bodySmall?.color,
+          ),
+        ),
+        SizedBox(
+          width: 140,
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            transitionBuilder: (child, animation) =>
+                FadeTransition(opacity: animation, child: child),
+            child: Text(
               periodLabel,
-              style: AppTypography.titleMedium.copyWith(
+              key: ValueKey(periodLabel),
+              textAlign: TextAlign.center,
+              style: AppTypography.monoSmall.copyWith(
                 color: theme.textTheme.bodyLarge?.color,
               ),
             ),
-            IconButton(
-              onPressed: onNext,
-              icon: const Icon(Icons.chevron_right),
-              iconSize: 20,
-            ),
-          ],
+          ),
+        ),
+        GestureDetector(
+          onTap: onNext,
+          child: Icon(
+            Icons.chevron_right,
+            size: 16,
+            color: theme.textTheme.bodySmall?.color,
+          ),
         ),
       ],
     );
@@ -78,30 +85,39 @@ class _TabButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
         padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.lg,
+          horizontal: AppSpacing.md,
           vertical: AppSpacing.sm,
         ),
         decoration: BoxDecoration(
-          color: isActive ? AppColors.codingPrimary : Colors.transparent,
+          color: isActive
+              ? AppColors.codingPrimary.withValues(alpha: 0.1)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(AppSpacing.chipRadius),
           border: Border.all(
             color: isActive
-                ? AppColors.codingPrimary
-                : Theme.of(context).dividerColor,
+                ? AppColors.codingPrimary.withValues(alpha: 0.3)
+                : theme.dividerColor,
+            width: 0.5,
           ),
         ),
-        child: Text(
-          label,
-          style: AppTypography.labelLarge.copyWith(
+        child: AnimatedDefaultTextStyle(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+          style: AppTypography.labelSmall.copyWith(
             color: isActive
-                ? Colors.white
-                : Theme.of(context).textTheme.bodySmall?.color,
+                ? AppColors.codingPrimary
+                : theme.textTheme.bodySmall?.color,
+            letterSpacing: 1.2,
           ),
+          child: Text(label),
         ),
       ),
     );

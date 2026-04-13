@@ -12,17 +12,38 @@ class AnalyticsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return BlocBuilder<AnalyticsBloc, AnalyticsState>(
       builder: (context, state) {
         if (state is AnalyticsLoadInProgress || state is AnalyticsInitial) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(
+            child: SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(
+                strokeWidth: 1.5,
+                color: theme.textTheme.bodySmall?.color,
+              ),
+            ),
+          );
         }
         if (state is AnalyticsLoadFailure) {
-          return const Center(child: Text('Failed to load analytics'));
+          return Center(
+            child: Text(
+              'Failed to load analytics',
+              style: AppTypography.bodySmall.copyWith(
+                color: theme.textTheme.bodySmall?.color,
+              ),
+            ),
+          );
         }
         final data = state as AnalyticsLoadSuccess;
         return SingleChildScrollView(
-          padding: const EdgeInsets.all(AppSpacing.xl),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.xl,
+            vertical: AppSpacing.lg,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -32,29 +53,31 @@ class AnalyticsPage extends StatelessWidget {
                 onPrevious: () {
                   if (data.isWeekly) {
                     context.read<AnalyticsBloc>().add(
-                      AnalyticsWeekChanged(weekOffset: data.weekOffset - 1),
-                    );
+                          AnalyticsWeekChanged(weekOffset: data.weekOffset - 1),
+                        );
                   } else {
                     context.read<AnalyticsBloc>().add(
-                      AnalyticsMonthChanged(monthOffset: data.monthOffset - 1),
-                    );
+                          AnalyticsMonthChanged(
+                              monthOffset: data.monthOffset - 1),
+                        );
                   }
                 },
                 onNext: () {
                   if (data.isWeekly) {
                     context.read<AnalyticsBloc>().add(
-                      AnalyticsWeekChanged(weekOffset: data.weekOffset + 1),
-                    );
+                          AnalyticsWeekChanged(weekOffset: data.weekOffset + 1),
+                        );
                   } else {
                     context.read<AnalyticsBloc>().add(
-                      AnalyticsMonthChanged(monthOffset: data.monthOffset + 1),
-                    );
+                          AnalyticsMonthChanged(
+                              monthOffset: data.monthOffset + 1),
+                        );
                   }
                 },
                 onTabChanged: (isWeekly) {
                   context.read<AnalyticsBloc>().add(
-                    AnalyticsTabChanged(isWeekly: isWeekly),
-                  );
+                        AnalyticsTabChanged(isWeekly: isWeekly),
+                      );
                 },
               ),
               const SizedBox(height: AppSpacing.xl),

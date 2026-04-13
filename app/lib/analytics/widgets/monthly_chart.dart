@@ -10,75 +10,74 @@ class MonthlyChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final tertiary = theme.textTheme.labelSmall?.color;
+
+    final codingHours = summary.totalCodingSeconds / 3600;
+    final meetingHours = summary.totalMeetingSeconds / 3600;
+
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AppCard(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        Text(
+          'BREAKDOWN',
+          style: AppTypography.labelSmall.copyWith(
+            color: tertiary,
+            letterSpacing: 1.5,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.lg),
+        SizedBox(
+          height: 180,
+          child: Row(
             children: [
-              Text(
-                'Coding vs Meeting',
-                style: AppTypography.titleMedium.copyWith(
-                  color: theme.textTheme.bodyLarge?.color,
+              Expanded(
+                child: PieChart(
+                  PieChartData(
+                    sectionsSpace: 1,
+                    centerSpaceRadius: 36,
+                    sections: [
+                      PieChartSectionData(
+                        value: summary.totalCodingSeconds.toDouble(),
+                        color: AppColors.codingPrimary,
+                        title: '${(summary.codingRatio * 100).round()}%',
+                        titleStyle: AppTypography.monoSmall.copyWith(
+                          color: AppColors.darkTextPrimary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        radius: 40,
+                      ),
+                      PieChartSectionData(
+                        value: summary.totalMeetingSeconds.toDouble(),
+                        color: AppColors.meetingPrimary,
+                        title:
+                            '${((1 - summary.codingRatio) * 100).round()}%',
+                        titleStyle: AppTypography.monoSmall.copyWith(
+                          color: AppColors.darkBackground,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        radius: 40,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(height: AppSpacing.lg),
-              SizedBox(
-                height: 180,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: PieChart(
-                        PieChartData(
-                          sectionsSpace: 2,
-                          centerSpaceRadius: 40,
-                          sections: [
-                            PieChartSectionData(
-                              value: summary.totalCodingSeconds.toDouble(),
-                              color: AppColors.codingPrimary,
-                              title: '${(summary.codingRatio * 100).round()}%',
-                              titleStyle: AppTypography.labelLarge.copyWith(
-                                color: Colors.white,
-                              ),
-                              radius: 45,
-                            ),
-                            PieChartSectionData(
-                              value: summary.totalMeetingSeconds.toDouble(),
-                              color: AppColors.meetingPrimary,
-                              title:
-                                  '${((1 - summary.codingRatio) * 100).round()}%',
-                              titleStyle: AppTypography.labelLarge.copyWith(
-                                color: Colors.white,
-                              ),
-                              radius: 45,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.lg),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _LegendRow(
-                          color: AppColors.codingPrimary,
-                          label: 'Coding',
-                          value:
-                              '${(summary.totalCodingSeconds / 3600).toStringAsFixed(1)}h',
-                        ),
-                        const SizedBox(height: AppSpacing.sm),
-                        _LegendRow(
-                          color: AppColors.meetingPrimary,
-                          label: 'Meeting',
-                          value:
-                              '${(summary.totalMeetingSeconds / 3600).toStringAsFixed(1)}h',
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+              const SizedBox(width: AppSpacing.xl),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _LegendRow(
+                    color: AppColors.codingPrimary,
+                    label: 'code',
+                    value: '${codingHours.toStringAsFixed(1)}h',
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  _LegendRow(
+                    color: AppColors.meetingPrimary,
+                    label: 'meet',
+                    value: '${meetingHours.toStringAsFixed(1)}h',
+                  ),
+                ],
               ),
             ],
           ),
@@ -105,25 +104,23 @@ class _LegendRow extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 10,
-          height: 10,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(2),
-          ),
+          width: 6,
+          height: 6,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: AppSpacing.sm),
         Text(
           label,
-          style: AppTypography.bodySmall.copyWith(
+          style: AppTypography.monoSmall.copyWith(
             color: Theme.of(context).textTheme.bodySmall?.color,
           ),
         ),
         const SizedBox(width: AppSpacing.sm),
         Text(
           value,
-          style: AppTypography.labelLarge.copyWith(
+          style: AppTypography.monoSmall.copyWith(
             color: Theme.of(context).textTheme.bodyLarge?.color,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ],

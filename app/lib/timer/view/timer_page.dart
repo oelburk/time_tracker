@@ -9,13 +9,19 @@ class TimerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Padding(
-      padding: EdgeInsets.all(AppSpacing.xl),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSpacing.xl,
+        vertical: AppSpacing.lg,
+      ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         children: [
+          SizedBox(height: AppSpacing.lg),
           TimerDisplay(),
-          SizedBox(height: AppSpacing.xl),
+          SizedBox(height: AppSpacing.xxl),
+          DailyTotals(),
+          Spacer(),
           ModeSwitchButtons(),
+          SizedBox(height: AppSpacing.lg),
         ],
       ),
     );

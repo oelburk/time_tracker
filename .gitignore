@@ -25,6 +25,9 @@ app/macos/Pods/
 # Agent memory
 MEMORY.md
 
+.cursor/
+.impeccable.md
+
 # IDE
 .vscode/
 *.swp

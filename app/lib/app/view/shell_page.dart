@@ -1,7 +1,10 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:app_ui/app_ui.dart';
+
 import '../../router.dart';
+
+const _kTitleBarHeight = 28.0;
 
 class ShellPage extends StatelessWidget {
   const ShellPage({super.key, required this.child});
@@ -20,46 +23,55 @@ class ShellPage extends StatelessWidget {
     final selectedIndex = _selectedIndex(context);
 
     return Scaffold(
-      body: Row(
+      body: Column(
         children: [
-          Container(
-            width: 64,
-            decoration: BoxDecoration(
-              color: theme.cardTheme.color ?? theme.scaffoldBackgroundColor,
-              border: Border(
-                right: BorderSide(color: theme.dividerColor, width: 0.5),
-              ),
-            ),
-            child: Column(
+          const SizedBox(height: _kTitleBarHeight),
+          Expanded(
+            child: Row(
               children: [
-                const SizedBox(height: AppSpacing.xl),
-                _NavItem(
-                  icon: Icons.timer_outlined,
-                  activeIcon: Icons.timer,
-                  isSelected: selectedIndex == 0,
-                  onTap: () => context.go(AppRoutePath.timer),
-                  color: AppColors.codingPrimary,
+                SizedBox(
+                  width: 44,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        right: BorderSide(
+                          color: theme.dividerColor,
+                          width: 0.5,
+                        ),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: AppSpacing.md),
+                        _NavItem(
+                          icon: Icons.timer_outlined,
+                          activeIcon: Icons.timer,
+                          isSelected: selectedIndex == 0,
+                          onTap: () => context.go(AppRoutePath.timer),
+                        ),
+                        const SizedBox(height: AppSpacing.xs),
+                        _NavItem(
+                          icon: Icons.bar_chart_outlined,
+                          activeIcon: Icons.bar_chart,
+                          isSelected: selectedIndex == 1,
+                          onTap: () => context.go(AppRoutePath.analytics),
+                        ),
+                        const Spacer(),
+                        _NavItem(
+                          icon: Icons.settings_outlined,
+                          activeIcon: Icons.settings,
+                          isSelected: selectedIndex == 2,
+                          onTap: () => context.go(AppRoutePath.settings),
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                      ],
+                    ),
+                  ),
                 ),
-                _NavItem(
-                  icon: Icons.bar_chart_outlined,
-                  activeIcon: Icons.bar_chart,
-                  isSelected: selectedIndex == 1,
-                  onTap: () => context.go(AppRoutePath.analytics),
-                  color: AppColors.codingPrimary,
-                ),
-                const Spacer(),
-                _NavItem(
-                  icon: Icons.settings_outlined,
-                  activeIcon: Icons.settings,
-                  isSelected: selectedIndex == 2,
-                  onTap: () => context.go(AppRoutePath.settings),
-                  color: AppColors.codingPrimary,
-                ),
-                const SizedBox(height: AppSpacing.lg),
+                Expanded(child: child),
               ],
             ),
           ),
-          Expanded(child: child),
         ],
       ),
     );
@@ -72,35 +84,36 @@ class _NavItem extends StatelessWidget {
     required this.activeIcon,
     required this.isSelected,
     required this.onTap,
-    required this.color,
   });
 
   final IconData icon;
   final IconData activeIcon;
   final bool isSelected;
   final VoidCallback onTap;
-  final Color color;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
-      child: GestureDetector(
-        onTap: onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: isSelected
-                ? color.withValues(alpha: 0.15)
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(AppSpacing.buttonRadius),
-          ),
-          child: Icon(
-            isSelected ? activeIcon : icon,
-            color: isSelected ? color : Theme.of(context).iconTheme.color,
-            size: 22,
+    final theme = Theme.of(context);
+    const activeColor = AppColors.codingPrimary;
+    final inactiveColor = theme.textTheme.bodySmall?.color ?? AppColors.idle;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: SizedBox(
+        width: 44,
+        height: 36,
+        child: Center(
+          child: TweenAnimationBuilder<Color?>(
+            tween: ColorTween(
+              end: isSelected ? activeColor : inactiveColor,
+            ),
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeOut,
+            builder: (context, color, _) => Icon(
+              isSelected ? activeIcon : icon,
+              color: color,
+              size: 18,
+            ),
           ),
         ),
       ),

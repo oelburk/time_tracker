@@ -31,3 +31,10 @@ final class SettingsHotkeyChanged extends SettingsEvent {
   @override
   List<Object?> get props => [hotkeyConfig];
 }
+
+final class SettingsLaunchAtLoginChanged extends SettingsEvent {
+  const SettingsLaunchAtLoginChanged({required this.enabled});
+  final bool enabled;
+  @override
+  List<Object?> get props => [enabled];
+}

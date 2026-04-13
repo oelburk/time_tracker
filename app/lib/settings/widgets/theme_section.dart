@@ -1,6 +1,7 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:app_ui/app_ui.dart';
+
 import '../../app/bloc/theme_cubit.dart';
 import '../bloc/settings_bloc.dart';
 import '../bloc/settings_event.dart';
@@ -19,45 +20,18 @@ class ThemeSection extends StatelessWidget {
         return true;
       },
       builder: (context, state) {
-        final themeMode = state is SettingsLoadSuccess
-            ? state.themeMode
-            : 'system';
-        return AppCard(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        final themeMode =
+            state is SettingsLoadSuccess ? state.themeMode : 'system';
+        return _Section(
+          label: 'APPEARANCE',
+          child: Row(
             children: [
-              Text(
-                'Appearance',
-                style: AppTypography.titleMedium.copyWith(
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              Row(
-                children: [
-                  _ThemeOption(
-                    label: 'Light',
-                    icon: Icons.light_mode,
-                    value: 'light',
-                    current: themeMode,
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  _ThemeOption(
-                    label: 'Dark',
-                    icon: Icons.dark_mode,
-                    value: 'dark',
-                    current: themeMode,
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  _ThemeOption(
-                    label: 'System',
-                    icon: Icons.settings_brightness,
-                    value: 'system',
-                    current: themeMode,
-                  ),
-                ],
-              ),
+              _ThemeOption(label: 'Light', value: 'light', current: themeMode),
+              const SizedBox(width: AppSpacing.sm),
+              _ThemeOption(label: 'Dark', value: 'dark', current: themeMode),
+              const SizedBox(width: AppSpacing.sm),
+              _ThemeOption(
+                  label: 'System', value: 'system', current: themeMode),
             ],
           ),
         );
@@ -69,25 +43,25 @@ class ThemeSection extends StatelessWidget {
 class _ThemeOption extends StatelessWidget {
   const _ThemeOption({
     required this.label,
-    required this.icon,
     required this.value,
     required this.current,
   });
 
   final String label;
-  final IconData icon;
   final String value;
   final String current;
 
   @override
   Widget build(BuildContext context) {
     final isSelected = value == current;
+    final theme = Theme.of(context);
+
     return Expanded(
       child: GestureDetector(
         onTap: () {
           context.read<SettingsBloc>().add(
-            SettingsThemeChanged(themeMode: value),
-          );
+                SettingsThemeChanged(themeMode: value),
+              );
           context.read<ThemeCubit>().setThemeMode(value);
         },
         child: AnimatedContainer(
@@ -95,37 +69,55 @@ class _ThemeOption extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
           decoration: BoxDecoration(
             color: isSelected
-                ? AppColors.codingPrimary.withValues(alpha: 0.15)
+                ? AppColors.codingPrimary.withValues(alpha: 0.1)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(AppSpacing.buttonRadius),
             border: Border.all(
               color: isSelected
-                  ? AppColors.codingPrimary
-                  : Theme.of(context).dividerColor,
+                  ? AppColors.codingPrimary.withValues(alpha: 0.3)
+                  : theme.dividerColor,
+              width: 0.5,
             ),
           ),
-          child: Column(
-            children: [
-              Icon(
-                icon,
-                size: 20,
+          child: Center(
+            child: Text(
+              label.toUpperCase(),
+              style: AppTypography.labelSmall.copyWith(
                 color: isSelected
                     ? AppColors.codingPrimary
-                    : Theme.of(context).iconTheme.color,
+                    : theme.textTheme.bodySmall?.color,
+                letterSpacing: 1.2,
               ),
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                label,
-                style: AppTypography.bodySmall.copyWith(
-                  color: isSelected
-                      ? AppColors.codingPrimary
-                      : Theme.of(context).textTheme.bodySmall?.color,
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class _Section extends StatelessWidget {
+  const _Section({required this.label, required this.child});
+  final String label;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final tertiary = Theme.of(context).textTheme.labelSmall?.color;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: AppTypography.labelSmall.copyWith(
+            color: tertiary,
+            letterSpacing: 1.5,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.md),
+        child,
+      ],
     );
   }
 }
